@@ -1,4 +1,5 @@
 ---
+published:  false
 layout:     post
 title:      "template"
 subtitle:   "this is template for my blog"
