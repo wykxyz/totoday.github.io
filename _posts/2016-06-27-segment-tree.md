@@ -32,84 +32,85 @@ tags:
 最最基础也最最重要的线段树,更新时只修改叶子节点,然后通过pushup(int r)函数向上更新
 
 先来个例题：[hdu1166 敌兵布阵](http://acm.hdu.edu.cn/showproblem.php?pid=1166)
+
 线段树功能：update:单点增减 query：区间求和
 
-```C++
-#include<iostream>
-#include<cstdio>
-using namespace std;
-typedef long long ll;
-#define mem(name,value) memset(name,value,sizeof(name))
-#pragma comment(linker, "/STACK:102400000,102400000")
-#define lson l,m,rt<<1
-#define rson m+1,r,rt<<1|1
-const int maxn=50010;
-
-struct SegTree
-{
-    int sum[maxn<<2];
-
-    void pushup(int l,int r,int rt){
-        sum[rt]=sum[rt<<1]+sum[rt<<1|1];
-    }
-
-    void build(int l,int r,int rt,int a[]){
-        if(l==r){
-            sum[rt]=a[l];
-            return;
-        }
-        int m=(l+r)>>1;
-        build(lson,a);
-        build(rson,a);
-        pushup(l,r,rt);
-    }
-
-    void update(int x,int c,int l,int r,int rt){
-        if(l==r){
-            sum[rt]+=c;
-            return;
-        }
-        int m=(l+r)>>1;
-        if(x<=m) update(x,c,lson);
-        else update(x,c,rson);
-        pushup(l,r,rt);
-    }
-
-    int query(int L,int R,int l,int r,int rt){
-        if(L<=l && r<=R) return sum[rt];
-        int m=(l+r)>>1,ans=0;
-        if(L<=m) ans+=query(L,R,lson);
-        if(m<R) ans+=query(L,R,rson);
-        return ans;
-    }
-}tree;
-
-int n;
-int a[maxn];
-char op[10];
-
-int main()
-{
-    int T,cas=1;
-    cin>>T;
-    while(T--){
-        printf("Case %d:\n",cas++);
-
-        cin>>n;
-        for(int i=1;i<=n;i++) scanf("%d",&a[i]);
-
-        tree.build(1,n,1,a);
-        while(scanf("%s",&op)==1 && op[0]!='E'){
-            int x,y;
-            scanf("%d%d",&x,&y);
-            if(op[0]=='A') tree.update(x,y,1,n,1);
-            else if(op[0]=='S') tree.update(x,-y,1,n,1);
-            else printf("%d\n",tree.query(x,y,1,n,1));
-        }
-    }
-    return 0;
-}
-```
+{% highlight c++ %}
+	#include<iostream>
+	#include<cstdio>
+	using namespace std;
+	typedef long long ll;
+	#define mem(name,value) memset(name,value,sizeof(name))
+	#pragma comment(linker, "/STACK:102400000,102400000")
+	#define lson l,m,rt<<1
+	#define rson m+1,r,rt<<1|1
+	const int maxn=50010;
+	
+	struct SegTree
+	{
+	    int sum[maxn<<2];
+	
+	    void pushup(int l,int r,int rt){
+	        sum[rt]=sum[rt<<1]+sum[rt<<1|1];
+	    }
+	
+	    void build(int l,int r,int rt,int a[]){
+	        if(l==r){
+	            sum[rt]=a[l];
+	            return;
+	        }
+	        int m=(l+r)>>1;
+	        build(lson,a);
+	        build(rson,a);
+	        pushup(l,r,rt);
+	    }
+	
+	    void update(int x,int c,int l,int r,int rt){
+	        if(l==r){
+	            sum[rt]+=c;
+	            return;
+	        }
+	        int m=(l+r)>>1;
+	        if(x<=m) update(x,c,lson);
+	        else update(x,c,rson);
+	        pushup(l,r,rt);
+	    }
+	
+	    int query(int L,int R,int l,int r,int rt){
+	        if(L<=l && r<=R) return sum[rt];
+	        int m=(l+r)>>1,ans=0;
+	        if(L<=m) ans+=query(L,R,lson);
+	        if(m<R) ans+=query(L,R,rson);
+	        return ans;
+	    }
+	}tree;
+	
+	int n;
+	int a[maxn];
+	char op[10];
+	
+	int main()
+	{
+	    int T,cas=1;
+	    cin>>T;
+	    while(T--){
+	        printf("Case %d:\n",cas++);
+	
+	        cin>>n;
+	        for(int i=1;i<=n;i++) scanf("%d",&a[i]);
+	
+	        tree.build(1,n,1,a);
+	        while(scanf("%s",&op)==1 && op[0]!='E'){
+	            int x,y;
+	            scanf("%d%d",&x,&y);
+	            if(op[0]=='A') tree.update(x,y,1,n,1);
+	            else if(op[0]=='S') tree.update(x,-y,1,n,1);
+	            else printf("%d\n",tree.query(x,y,1,n,1));
+	        }
+	    }
+	    return 0;
+	}
+{% endhighlight %}
 
 [hdu1754 I Hate It](http://acm.hdu.edu.cn/showproblem.php?pid=1754)
 线段树功能：update：单点替换，query：区间最大值
