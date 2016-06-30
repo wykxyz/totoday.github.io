@@ -397,7 +397,7 @@ int main()
 
         cout<<ans<<endl;
     }
-    return 0;
+	return 0;
 }
 {% endhighlight %}
 
@@ -408,6 +408,120 @@ int main()
 
 
 ## 区间合并
+
+这类题目会询问区间中满足条件的连续最长区间,所以pushup的时候需要对左右儿子的区间进行合并。个人感觉其实只要理解了线段树的点更新和区间更新，注意一下线段树维护的变量，这类题就可迎刃而解。<br>
+[poj3667 Hotel](http://poj.org/problem?id=3667)<br>
+题意:<br>
+1 a:询问是不是有连续长度为a的空房间,有的话住进最左边<br>
+2 a b:将[a,a+b-1]的房间清空<br>
+思路:记录区间中最长的空房间,以及从l往右、从r往左的最长空房间<br>
+线段树操作:update:区间替换 query:询问满足条件的最左断点
+
+{% highlight ruby %}
+
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+typedef long long ll;
+#define mem(name,value) memset(name,value,sizeof(name))
+#pragma comment(linker, "/STACK:102400000,102400000")
+#define lson l,m,rt<<1
+#define rson m+1,r,rt<<1|1
+const int maxn=50010;
+
+struct SegTree
+{
+    int msum[maxn<<2],lsum[maxn<<2],rsum[maxn<<2],col[maxn<<2];
+
+    void pushup(int l,int r,int rt){
+        int m=(l+r)>>1;
+        msum[rt]=max(max(msum[rt<<1],msum[rt<<1|1]),rsum[rt<<1]+lsum[rt<<1|1]);
+        if(lsum[rt<<1]==m-l+1) lsum[rt]=lsum[rt<<1]+lsum[rt<<1|1];
+        else lsum[rt]=lsum[rt<<1];
+        if(rsum[rt<<1|1]==r-m) rsum[rt]=rsum[rt<<1|1]+rsum[rt<<1];
+        else rsum[rt]=rsum[rt<<1|1];
+    }
+
+    void pushdown(int l,int r,int rt){
+        int m=(l+r)>>1;
+        msum[rt<<1]=lsum[rt<<1]=rsum[rt<<1]=(m-l+1)*col[rt];
+        msum[rt<<1|1]=lsum[rt<<1|1]=rsum[rt<<1|1]=(r-m)*col[rt];
+        col[rt<<1]=col[rt<<1|1]=col[rt];
+        col[rt]=-1;
+    }
+
+    void build(int l,int r,int rt){
+        col[rt]=-1;
+        if(l==r){
+            msum[rt]=lsum[rt]=rsum[rt]=1;
+            return;
+        }
+        int m=(l+r)>>1;
+        build(lson);
+        build(rson);
+        pushup(l,r,rt);
+    }
+
+    void update(int L,int R,int c,int l,int r,int rt){
+        if(L<=l && r<=R){
+            msum[rt]=lsum[rt]=rsum[rt]=(r-l+1)*c;
+            col[rt]=c;
+            return;
+        }
+        if(col[rt]!=-1) pushdown(l,r,rt);
+        int m=(l+r)>>1;
+        if(L<=m) update(L,R,c,lson);
+        if(m<R) update(L,R,c,rson);
+        pushup(l,r,rt);
+    }
+
+    int query(int x,int l,int r,int rt){
+        if(l==r) return l;
+        if(col[rt]!=-1) pushdown(l,r,rt);
+        int m=(l+r)>>1;
+        if(msum[rt<<1]>=x) return query(x,lson);
+        if(rsum[rt<<1]+lsum[rt<<1|1]>=x) return m+1-rsum[rt<<1];
+        return query(x,rson);
+    }
+}tree;
+
+int n,q;
+
+int main()
+{
+    while(cin>>n>>q){
+        tree.build(1,n,1);
+        while(q--){
+            int op,x,y;
+            scanf("%d",&op);
+            if(op==1){
+                scanf("%d",&x);
+                if(tree.msum[1]<x){
+                    puts("0");
+                    continue;
+                }
+                int pos=tree.query(x,1,n,1);
+                printf("%d\n",pos);
+                tree.update(pos,pos+x-1,0,1,n,1);
+            }else{
+                scanf("%d%d",&x,&y);
+                tree.update(x,x+y-1,1,1,n,1);
+            }
+        }
+    }
+    return 0;
+}
+
+{% endhighlight %}
+
+推荐练习：<br>
+[hdu3308 LCIS](http://acm.hdu.edu.cn/showproblem.php?pid=3308)
+[hdu3397 Sequence operation](http://acm.hdu.edu.cn/showproblem.php?pid=3397)
+[hdu2871 Memory Control](http://acm.hdu.edu.cn/showproblem.php?pid=2871)
+[hdu1540 Tunnel Warfare](http://acm.hdu.edu.cn/showproblem.php?pid=1540)
 
 ## 扫描线
 
