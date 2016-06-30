@@ -518,10 +518,10 @@ int main()
 {% endhighlight %}
 
 推荐练习：<br>
-[hdu3308 LCIS](http://acm.hdu.edu.cn/showproblem.php?pid=3308)
-[hdu3397 Sequence operation](http://acm.hdu.edu.cn/showproblem.php?pid=3397)
-[hdu2871 Memory Control](http://acm.hdu.edu.cn/showproblem.php?pid=2871)
-[hdu1540 Tunnel Warfare](http://acm.hdu.edu.cn/showproblem.php?pid=1540)
+[hdu3308 LCIS](http://acm.hdu.edu.cn/showproblem.php?pid=3308)<br>
+[hdu3397 Sequence operation](http://acm.hdu.edu.cn/showproblem.php?pid=3397)<br>
+[hdu2871 Memory Control](http://acm.hdu.edu.cn/showproblem.php?pid=2871)<br>
+[hdu1540 Tunnel Warfare](http://acm.hdu.edu.cn/showproblem.php?pid=1540)<br>
 
 ## 扫描线
 
